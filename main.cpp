@@ -9,6 +9,13 @@ struct mypoint
     double y;
 };
 
+struct mypoint_3d
+{
+    double x;
+    double y;
+    double z;
+};
+
 double distance(const mypoint &a, const mypoint &b)
 {
     double dx = a.x - b.x;
@@ -41,6 +48,33 @@ namespace traits
         }
     };
 
+    template <>
+    struct access<mypoint_3d, 0>
+    {
+        static double get(const mypoint_3d &p)
+        {
+            return p.x;
+        }
+    };
+
+    template <>
+    struct access<mypoint_3d, 1>
+    {
+        static double get(const mypoint_3d &p)
+        {
+            return p.y;
+        }
+    };
+
+    template <>
+    struct access<mypoint_3d, 2>
+    {
+        static double get(const mypoint_3d &p)
+        {
+            return p.z;
+        }
+    };
+
     template <int D, typename T>
     double get(const T &p)
     {
@@ -60,6 +94,11 @@ namespace traits
 
     template <>
     struct dimension<mypoint> : boost::mpl::int_<2>
+    {
+    };
+
+    template <>
+    struct dimension<mypoint_3d> : boost::mpl::int_<3>
     {
     };
 
@@ -98,7 +137,9 @@ struct dimension : traits::dimension<T>
 int main(int, char **)
 {
     mypoint p1(100, 99), p2(50, 25);
+    mypoint_3d p3(100, 99, 100), p4(50, 25, 10);
 
     // std::cout << distance(p1, p2) << std::endl;
     std::cout << traits::distance(p1, p2) << std::endl;
+    std::cout << traits::distance(p3, p4) << std::endl;
 }
